@@ -1,24 +1,18 @@
-var map = L.map('map', {
-  center: [41.31118, -72.92847],
-  zoom: 16,
-});
-
+var map = L.map('map').setView([41.31118, -72.92847], 16);
 
 // Search Addresses
 L.Control.geocoder({
   defaultMarkGeocode: false
 })
-  .on('markgeocode', function(e) {
-    map.fitBounds(e.geocode.bbox);
-  })
-  .addTo(map);
+.on('markgeocode', function(e) {
+  map.fitBounds(e.geocode.bbox);
+})
+.addTo(map);
 
-
-
-//Scale bar
+// Scale bar
 L.control.scale().addTo(map);
 
-// --- Basemap options ---
+// Basemaps
 var Satellite = L.tileLayer(
   'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   { attribution: 'Tiles © Esri' }
@@ -39,7 +33,6 @@ var StamenTerrain = L.tileLayer(
   { attribution: 'Map tiles by Stamen Design — Data © OpenStreetMap' }
 );
 
-
 var EsriTopo = L.tileLayer(
   'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
   { attribution: 'Tiles © Esri' }
@@ -51,9 +44,9 @@ var EsriSat = L.tileLayer(
 );
 
 // Default basemap
-Satellite.addTo(map);
+EsriSat.addTo(map);
 
-// You can add or remove basemaps here. A button will appear top right of map to toggle.
+// Layer control
 var baseMaps = {
   "Satellite (Esri)": EsriSat,
   "CARTO Light": CartoLight,
@@ -64,17 +57,19 @@ var baseMaps = {
 
 L.control.layers(baseMaps).addTo(map);
 
-
+// Polygon (Sterling Memorial Library)
 var polygon = L.polygon([
   [41.31112, -72.92877],
   [41.31096, -72.92842],
   [41.31105, -72.92834],
   [41.31119, -72.92870]
 ]).addTo(map);
+
 polygon.bindPopup("Sterling Memorial Library");
 
+// Coffee shop
 var circle = L.circle([41.310490, -72.922764], {
   radius: 20,
   color: "brown"
 }).addTo(map)
-  .bindPopup("Willoughby's Coffee ☕");
+.bindPopup("Willoughby's Coffee ☕");
