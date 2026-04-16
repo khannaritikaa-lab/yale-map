@@ -1,73 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> GeoTag Interactive Mapping Exercise</title>
+    <title>GeoTag Interactive Mapping Exercise</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin="" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+
+    <!-- Geocoder CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 300px;
+            padding: 20px;
+            font-size: 16px;
+            background-color: #add8e6;
+            overflow-y: auto;
+            border-right: 2px solid black;
+        }
+
+        .green-heading {
+            color: #3D9970;
+            text-align: center;
+        }
+
+        /* MAP (THIS FIXES YOUR BLANK MAP ISSUE) */
+        #map {
+            position: absolute;
+            left: 300px;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
 </head>
-<style>
 
-.sidebar {
-  position: absolute;
-  left: 0px;
-  width: 250px;
-  top: 0;
-  bottom: 0;
-  overflow-y: auto;
-  height: 100vh;
-  padding: 20px;
-  font-size: 16px;
-  border: solid;
-  background-color: #add8e6;
-}
-.main-heading {
-    font-size: 15px;
-}
-.green-heading {
-  color: #3D9970;
-  text-align: center;
-}
-
-</style>
 <body>
-  <div class="sidebar">
-  <center>
-	<h2 class="green-heading">GeoTag Mapping</h2>
-  </center>
-  <div>
 
-<div class="row">
-  <div class="column">
-    <center> <img src="images/yale.png" alt="Yale Logo" style="width:60%"> </center>
-  </div>
-  <font color="MidnightBlue"><center><h3>Mapping Yale University!</h3></center></font>
-  </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
 
+    <center>
+        <h2 class="green-heading">GeoTag Mapping</h2>
+    </center>
 
-<p>This map highlights Sterling Memorial Library and Willoughby's Coffee & Tea near campus.</p>
+    <center>
+        <img src="images/yale.png" alt="Yale Logo" style="width:60%">
+    </center>
 
+    <center>
+        <h3>Mapping Yale University!</h3>
+    </center>
 
-<footer>
-       <p> Share this template! <br> https://github.com/ </p>
-</footer>
+    <p>
+        This map highlights Sterling Memorial Library and Willoughby's Coffee & Tea near campus.
+    </p>
 
-    <div id="map" style=" position: fixed; right: 0; left: 300px; top: 0; bottom: 0 "></div>
+    <footer>
+        <p>Share this template! <br> https://github.com/</p>
+    </footer>
 
-    <!-- JS IMPORTS -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- JS LIBRARIES -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <script src= "http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
-    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src= "js/setup.js"></script>
-    <script src= "js/tyler.js"></script>
+<script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
-    <script>
-// Create a style variable
-    var myStyle = {
+<!-- YOUR FILES -->
+<script src="js/setup.js"></script>
+<script src="js/tyler.js"></script>
+
+<!-- GEOJSON STYLE -->
+<script>
+var myStyle = {
     radius: 5,
     fillColor: "#ff7800",
     color: "#000",
@@ -76,18 +98,15 @@
     fillOpacity: 0.7
 };
 
-//Load in geojson
-    var tyler =   L.geoJSON(tyler, {
-          style: myStyle
-        }).bindPopup(function (layer) {
-       return "" + layer.feature.properties.name
-    }).addTo(map).bringToBack();
-
-
+var tylerLayer = L.geoJSON(tyler, {
+    style: myStyle,
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.properties.name);
+    }
+}).addTo(map).bringToBack();
 
 console.log("Map loaded successfully!");
-    </script>
-
+</script>
 
 </body>
 </html>
